@@ -1,0 +1,111 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+Распознавание
+{% endblock %}
+
+{% block content %}
+<h1>Распознавание</h1>
+<form method="post" action="{% url 'recognition' %}">
+    {% csrf_token %}
+    <div id="container">
+        <div id="left-column">
+        <div id="parameters-container">
+            <p>Образовательный ресурс - {{ name_data }}</p>
+            <p>Нижняя граница признака ОР - {{ lower_bound }}</p>
+            <p>Верхняя граница признака ОР - {{ upper_bound }}</p>
+            <p>Кол-во признаков - {{ n }}</p>
+            <label for="new_obj">Введите признаки объекта:</label><br>
+            <input type="text" id="new_obj" name="new_obj" value="{{ exam_obj }}"><br>
+        </div>
+
+            <div id="s-container">
+
+            {% if midle_s %}
+                <p>Новый объект: {{ new_obj }}</p>
+                <p>Дистанция до классов:</p>
+                <ul>
+                {% for k, v in midle_s.items %}
+                        <li>Расстояние до класса {{ k }}: {{ v }}</li>
+                {% endfor %}
+                </ul>
+                <p>Элемент принадлежит классу - {{ true_cluster }}</p>
+            {% endif %}
+            </div>
+        </div>
+        <div id="right-column">
+            <div id="action-container">
+                <input id="recog-button" type="submit" value="Распознать объект">
+            </div>
+            <div id="result-container">
+                <label for="plot_data">Результат распознавания:</label><br>
+                <img id="plot" src="" alt="Результат кластеризации">
+                <input type="hidden" id="plot_data" name="plot_data">
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<style>
+    #recog-button {
+        background-color: #000000;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    #container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20px;
+    }
+
+    #parameters-container {
+        grid-column: 1 / 2;
+    }
+
+    #left-column {
+        grid-column: 1 / 2;
+    }
+
+    #right-column {
+        grid-column: 2 / 3;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #action-container {
+        margin-bottom: 20px;
+    }
+
+    #result-container {
+        margin-bottom: 20px;
+    }
+
+    #s-container {
+        margin-bottom: 20px;
+    }
+
+    #plot {
+        max-width: 100%;
+    }
+
+</style>
+
+<script>
+    function updateImage(data) {
+        const img = document.getElementById('plot');
+        img.src = 'data:image/png;base64,' + data;
+        const plotDataInput = document.getElementById('plot_data');
+        plotDataInput.value = data;
+    }
+
+    const plotData = '{{ plot_data|default:'' }}';
+    if (plotData) {
+        updateImage(plotData);
+    }
+</script>
+{% endblock %}

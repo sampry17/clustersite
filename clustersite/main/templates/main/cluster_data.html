@@ -1,0 +1,133 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title%}
+Кластеризация
+{% endblock %}
+
+{% block content%}
+    <h1>Кластеризация</h1>
+
+    <form method="post" action="{% url 'cluster_data' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+    <div id="container">
+        <div id="algorithm-container">
+        <label for="algorithm-select">Выберите алгоритм кластеризации:</label><br>
+        <select id="algorithm-select" name="algorithm">
+            <option value="k_means">K-Means</option>
+            <option value="hierarchical">Hierarchical Clustering</option>
+        </select>
+
+        <div id="button-container">
+            <input id="select-button" type="button" value="Выбрать" onclick="selectAlgorithm()">
+            </div>
+                </div>
+
+            <div id="parameters-container">
+
+
+
+            <div id="k_means-template" class="algorithm-template">
+                <label for="name_data_me">Образовательный ресурс:</label><br>
+                <input type="text" id="name_data_me" name="name_data_me" value="Введите название.."><br>
+                 <label for="clstr_count_me">Количество кластеров :</label><br>
+                 <input type="number" id="clstr_count_me" name="clstr_count_me" min="1" value="6"><br>
+            </div>
+
+
+            <div id="hierarchical-template" class="algorithm-template" style="display: none;">
+                <label for="name_data">Образовательный ресурс:</label><br>
+                <input type="text" id="name_data" name="name_data" value="Введите название.."><br>
+                <label for="clstr_count">Количество кластеров :</label><br>
+                <input type="number" id="clstr_count" name="clstr_count" min="1" value="6"><br>
+                <label for="linkage">Метод связи:</label><br>
+                <select id="linkage" name="linkage">
+                    <option value="ward">Ward</option>
+                    <option value="complete">Complete</option>
+                    <option value="average">Average</option>
+                </select><br>
+
+                <label for="affinity">Метрика расстояния:</label><br>
+                <select id="affinity" name="affinity">
+                    <option value="euclidean">Евклидово расстояние</option>
+                    <option value="manhattan">Манхэттенское расстояние</option>
+                </select><br>
+            </div>
+                <br>
+                <div id="button-container1">
+                    <p>Загрузите информацию об ОР:</p>
+                    <input type="file" name="users_file" accept=".xlsx, .xls">
+                    <input id="select-button2" type="submit" value="Загрузить">
+                </div>
+        </div>
+
+  </div>
+
+
+    </form>
+
+<style>
+
+#cluster-button {
+  background-color: #000000;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+ #container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+  }
+
+  #algorithm-container {
+    grid-column: 1 / 2;
+    margin-bottom: 2px;
+  }
+
+  #parameters-container {
+    grid-column: 1 / 2;
+  }
+
+  #action-container {
+    grid-column: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: -100px;
+  }
+
+  #result-container {
+    margin-bottom: 10px;
+  }
+
+  #plot {
+    max-width: 100%;
+  }
+
+  #select-button {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 5px;
+  }
+
+
+    #select-button2 {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 5px;
+  }
+
+</style>
+
+
+{% endblock %}

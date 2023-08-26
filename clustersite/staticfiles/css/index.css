@@ -1,0 +1,30 @@
+.plot-container label {
+    font-weight: bold;
+}
+
+.plot-container img {
+    max-width: 100%;
+    height: auto;
+}
+
+.content-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.algorithm-template {
+    width: 45%;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex; /* Добавленная строка */
+    flex-wrap: wrap; /* Добавленная строка */
+    justify-content: space-between; /* Добавленная строка */
+}
+
+.submit-container {
+    width: 100%; /* Изменено значение ширины */
+    align-self: flex-start;
+}

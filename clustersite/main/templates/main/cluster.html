@@ -1,0 +1,242 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title%}
+Кластеризация
+{% endblock %}
+
+
+
+
+
+{% block content%}
+    <h1>Кластеризация</h1>
+    <form method="post" action="{% url 'cluster' %}">
+        {% csrf_token %}
+    <div id="container">
+        <div id="algorithm-container">
+        <label for="algorithm-select">Выберите алгоритм кластеризации:</label><br>
+        <select id="algorithm-select" name="algorithm">
+            <option value="users">Пользовательский</option>
+            <option value="k_means">K-Means</option>
+            <option value="hierarchical">Hierarchical Clustering</option>
+        </select>
+        <div id="button-container">
+            <input id="select-button" type="button" value="Выбрать" onclick="selectAlgorithm()">
+        </div>
+            </div>
+
+        <div id="parameters-container">
+        <div id="users-template" class="algorithm-template">
+            <label for="name_data_us">Образовательный ресурс:</label><br>
+            <input type="text" id="name_data_us" name="name_data_us" value="Введите название.."><br>
+            
+            <label for="K_us">Количество объектов ОР:</label><br>
+            <input type="number" id="K_us" name="K_us" min="1" value="100"><br>
+
+            <label for="n_us">Количество признаков объекта ОР:</label><br>
+            <input type="number" id="n_us" name="n_us" min="1" value="2"><br>
+
+
+            <label for="lower_bound_us">Нижняя граница признака:</label><br>
+            <input type="number" id="lower_bound_us" name="lower_bound_us" value="1"><br>
+
+            <label for="upper_bound_us">Верхняя граница признака:</label><br>
+            <input type="number" id="upper_bound_us" name="upper_bound_us" value="10"><br>
+
+            <label for="metrika">Выберите метрику:</label><br>
+            <select id="metrika" name="metrika">
+                <option value="1">Манхэттенское расстояние</option>
+                <option value="2">Евклидово расстояние</option>
+                <option value="3">Расстояние Чебышева</option>
+            </select><br>
+
+            <label for="q1">Начальный центроид 1:</label><br>
+            <input type="text" id="q1" name="q1" value="[1, 1]"><br>
+
+            <label for="q2">Начальный центроид 2:</label><br>
+            <input type="text" id="q2" name="q2" value="[3, 3]"><br>
+
+            <label for="q3">Начальный центроид 3:</label><br>
+            <input type="text" id="q3" name="q3" value="[5, 5]"><br>
+        </div>
+
+
+
+        <div id="k_means-template" class="algorithm-template">
+            <label for="name_data_me">Образовательный ресурс:</label><br>
+            <input type="text" id="name_data_me" name="name_data_me" value="Введите название.."><br>
+
+            <label for="clstr_count_me">Количество кластеров :</label><br>
+            <input type="number" id="clstr_count_me" name="clstr_count_me" min="1" value="6"><br>
+
+            <label for="K_me">Количество объектов ОР:</label><br>
+            <input type="number" id="K_me" name="K_me" min="1" value="100"><br>
+
+            <label for="n_me">Количество признаков объекта ОР:</label><br>
+            <input type="number" id="n_me" name="n_me" min="1" value="2"><br>
+
+            <label for="lower_bound_me">Нижняя граница признака:</label><br>
+            <input type="number" id="lower_bound_me" name="lower_bound_me" value="1"><br>
+
+            <label for="upper_bound_me">Верхняя граница признака:</label><br>
+            <input type="number" id="upper_bound_me" name="upper_bound_me" value="10"><br>
+
+            {% if q1 %}
+                <p>Начальный центроид 1: {{ q1 }}</p>
+                <p>Начальный центроид 2: {{ q2 }}</p>
+                <p>Начальный центроид 3: {{ q3 }}</p>
+            {% endif %}
+        </div>
+
+
+        <div id="dbscan-template" class="algorithm-template" style="display: none;">
+            <!-- HTML-шаблон для DBSCAN -->
+        </div>
+
+
+        <div id="hierarchical-template" class="algorithm-template" style="display: none;">
+            <label for="name_data">Образовательный ресурс:</label><br>
+            <input type="text" id="name_data" name="name_data" value="Введите название.."><br>
+
+            <label for="clstr_count">Количество кластеров :</label><br>
+            <input type="number" id="clstr_count" name="clstr_count" min="1" value="6"><br>
+
+            <label for="K">Количество объектов ОР:</label><br>
+            <input type="number" id="K" name="K" min="1" value="100"><br>
+
+            <label for="n">Количество признаков объекта ОР:</label><br>
+            <input type="number" id="n" name="n" min="1" value="2"><br>
+
+            <label for="lower_bound">Нижняя граница признака:</label><br>
+            <input type="number" id="lower_bound" name="lower_bound" value="1"><br>
+
+            <label for="upper_bound">Верхняя граница признака:</label><br>
+            <input type="number" id="upper_bound" name="upper_bound" value="10"><br>
+
+            <label for="linkage">Метод связи:</label><br>
+            <select id="linkage" name="linkage">
+                <option value="ward">Ward</option>
+                <option value="complete">Complete</option>
+                <option value="average">Average</option>
+            </select><br>
+
+            <label for="affinity">Метрика расстояния:</label><br>
+            <select id="affinity" name="affinity">
+                <option value="euclidean">Евклидово расстояние</option>
+                <option value="manhattan">Манхэттенское расстояние</option>
+            </select><br>
+        </div>
+         </div>
+
+        <div id="action-container">
+            <input id="cluster-button" type="submit" value="Кластеризовать">
+      <div id="result-container">
+        <label for="plot_data">Результат кластеризации:</label><br>
+        <img id="plot" src="" alt="Результат кластеризации">
+        <input type="hidden" id="plot_data" name="plot_data">
+      </div>
+
+    </div>
+  </div>
+
+
+    </form>
+
+<style>
+
+#cluster-button {
+  background-color: #000000;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+ #container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+  }
+
+  #algorithm-container {
+    grid-column: 1 / 2;
+    margin-bottom: 2px;
+  }
+
+  #parameters-container {
+    grid-column: 1 / 2;
+  }
+
+  #action-container {
+    grid-column: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: -100px;
+  }
+
+  #result-container {
+    margin-bottom: 10px;
+  }
+
+  #plot {
+    max-width: 100%;
+  }
+
+  #select-button {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 5px;
+  }
+
+</style>
+
+<script>
+
+    window.addEventListener('load', function () {
+    const selectedAlgorithm = localStorage.getItem('selectedAlgorithm');
+    if (selectedAlgorithm) {
+        const algorithmSelect = document.getElementById('algorithm-select');
+        algorithmSelect.value = selectedAlgorithm;
+        selectAlgorithm();
+    }
+});
+
+function selectAlgorithm() {
+    const algorithmSelect = document.getElementById('algorithm-select');
+    const selectedAlgorithm = algorithmSelect.value;
+
+    localStorage.setItem('selectedAlgorithm', selectedAlgorithm);
+
+    const algorithmTemplates = document.getElementsByClassName('algorithm-template');
+    for (let i = 0; i < algorithmTemplates.length; i++) {
+        if (algorithmTemplates[i].id === selectedAlgorithm + '-template') {
+            algorithmTemplates[i].style.display = 'block';
+        } else {
+            algorithmTemplates[i].style.display = 'none';
+        }
+    }
+}
+
+function showPlot() {
+    const plotBlock = document.getElementById('plot-block');
+    plotBlock.style.display = 'block';
+}
+
+function updateImage(data) {
+    const img = document.getElementById('plot');
+    img.src = 'data:image/png;base64,' + data;
+    const plotDataInput = document.getElementById('plot_data');
+    plotDataInput.value = data;
+}
+
+const plotData = '{{ plot_data|default:'' }}';
+if (plotData) {
+    updateImage(plotData);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,25 @@
+.solution-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.button-container {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+.solution-button,
+form input[type="submit"] {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.solution-button a {
+  color: #fff;
+  text-decoration: none;
+}

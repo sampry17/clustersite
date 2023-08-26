@@ -1,0 +1,69 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h4>Доступные решения:</h4>
+    {% if clusters %}
+        {% for elem in clusters %}
+            <div class="alert alert-warning mt-2 solution-container">
+                <div class="row">
+                    <h4>{{ elem.name_data }}</h4>
+                    <h6>Кол-во элементов - {{ elem.k }}</h6>
+                </div>
+                <div class="button-container">
+                    <button class="solution-button" data-id="{{ elem.id }}">
+                        <a href="{% url 'recognition' %}?id={{ elem.id }}">Выбрать</a>
+                    </button>
+                    <form method="post" action="{% url 'delete_solution' elem.id %}">
+                        {% csrf_token %}
+                        <input type="submit" value="Удалить">
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Решения отсутствуют</p>
+    {% endif %}
+
+<style>
+    .solution-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #EDEDED;
+  border: 1px solid #000000;
+
+}
+
+.button-container {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+  color: #EDEDED;
+}
+
+.solution-button,
+form input[type="submit"] {
+  background-color: #000000;
+  color: #EDEDED;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.solution-button a {
+  color: #EDEDED;
+  text-decoration: none;
+}
+</style>
+{% endblock %}
+
